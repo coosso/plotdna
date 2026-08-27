@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 const links = [
   { href: "#capabilities", label: "核心能力" },
+  { href: "#demo", label: "产品演示" },
   { href: "#workflow", label: "工作流程" },
   { href: "#modules", label: "功能模块" },
 ]
