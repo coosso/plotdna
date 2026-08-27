@@ -1,0 +1,22 @@
+"use client"
+
+import { ArrowRight, Clock3, Dna, FileInput, FileOutput, GitBranch, ShieldAlert, Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { activities, demoProject, sourceAssets } from "@/lib/workspace-data"
+import type { ViewId } from "./header"
+
+const pipeline = [
+  { label:"素材导入",detail:"4 个来源",value:100,view:"sources" as ViewId }, { label:"DNA 拆解",detail:"18 个结构节点",value:100,view:"market" as ViewId },
+  { label:"结构重组",detail:"v0.8.3 已编译",value:100,view:"mixer" as ViewId }, { label:"分镜生成",detail:"6 / 6 幕",value:100,view:"studio" as ViewId },
+  { label:"风险检查",detail:"1 项待确认",value:72,view:"analytics" as ViewId }, { label:"交付导出",detail:"5 种格式",value:48,view:"exports" as ViewId },
+]
+const metrics = [["素材来源","4",FileInput],["DNA 节点","18",Dna],["成片镜头","6",Sparkles],["风险项","1",ShieldAlert],["血缘路径","6",GitBranch],["导出格式","5",FileOutput]] as const
+export function ProjectOverview({ onView }: { onView:(view:ViewId)=>void }) {
+ return <section className="flex flex-col gap-6"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><div className="mb-2 flex items-center gap-2"><Badge variant="secondary">{demoProject.status}</Badge><span className="font-mono text-xs text-muted-foreground">{demoProject.id} · {demoProject.version}</span></div><h1 className="text-balance text-3xl font-semibold tracking-tight">{demoProject.title}</h1><p className="mt-2 text-muted-foreground">{demoProject.genre} · 目标 {demoProject.targetDuration} · 更新于 {demoProject.updatedAt}</p></div><div className="flex gap-2"><Button variant="outline" onClick={()=>onView("sources")}><FileInput data-icon="inline-start"/>导入素材</Button><Button onClick={()=>onView("mixer")}>继续创作<ArrowRight data-icon="inline-end"/></Button></div></div>
+ <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">{metrics.map(([label,value,Icon])=><Card key={label}><CardContent className="flex items-center gap-3 py-4"><span className="flex size-9 items-center justify-center rounded-md bg-muted"><Icon className="size-4"/></span><div><p className="font-mono text-xl font-semibold">{value}</p><p className="text-xs text-muted-foreground">{label}</p></div></CardContent></Card>)}</div>
+ <Card><CardHeader><CardTitle>项目流水线</CardTitle><CardDescription>从原始素材到可交付资产，每一步都可回看、追踪和重算。</CardDescription></CardHeader><CardContent><div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">{pipeline.map((step,i)=><button key={step.label} onClick={()=>onView(step.view)} className="flex flex-col gap-3 rounded-lg border p-4 text-left transition-colors hover:bg-muted"><div className="flex w-full items-center justify-between"><span className="font-mono text-xs text-muted-foreground">0{i+1}</span><Badge variant={step.value===100?"secondary":"outline"}>{step.value}%</Badge></div><div><p className="font-medium">{step.label}</p><p className="mt-1 text-xs text-muted-foreground">{step.detail}</p></div><Progress value={step.value}/></button>)}</div></CardContent></Card>
+ <div className="grid gap-5 xl:grid-cols-[1.3fr_.7fr]"><Card><CardHeader><CardTitle>最近活动</CardTitle><CardDescription>项目中的关键操作与自动化处理记录。</CardDescription></CardHeader><CardContent className="flex flex-col gap-1">{activities.map(a=><div key={a.id} className="flex gap-3 border-b py-3 last:border-0"><span className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-muted"><Clock3 className="size-4"/></span><div className="min-w-0 flex-1"><div className="flex items-center justify-between gap-3"><p className="font-medium">{a.action}</p><span className="shrink-0 text-xs text-muted-foreground">{a.time}</span></div><p className="mt-1 text-sm text-muted-foreground">{a.detail}</p></div></div>)}</CardContent></Card><Card><CardHeader><CardTitle>来源健康度</CardTitle><CardDescription>素材解析与引用覆盖状态。</CardDescription></CardHeader><CardContent className="flex flex-col gap-4">{sourceAssets.map(s=><div key={s.id} className="flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm font-medium">{s.name}</p><p className="text-xs text-muted-foreground">{s.id} · 引用 {s.citations} 次</p></div><Badge variant={s.status==="已解析"?"secondary":"outline"}>{s.status}</Badge></div>)}</CardContent></Card></div></section>
+}

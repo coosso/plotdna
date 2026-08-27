@@ -1,51 +1,15 @@
 "use client"
 
-import { Boxes, Download, Shuffle, Sparkles } from "lucide-react"
+import { Boxes, ChevronDown, Download, Shuffle, Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { APISettingsDialog } from "./api-settings-dialog"
-
-export type ViewId = "market" | "mixer" | "studio" | "analytics"
-
-const viewMeta: Record<ViewId, { title: string; description: string }> = {
-  market: { title: "DNA 市场", description: "浏览经过抽象与相似度清洗的叙事结构" },
-  mixer: { title: "重组实验室", description: "组合结构、情绪与视觉语法" },
-  studio: { title: "分镜工坊", description: "将叙事 DNA 编译为可执行分镜" },
-  analytics: { title: "分析报告", description: "评估节拍贡献、原创度与制作效率" },
-}
-
-export function Header({ view, onRandom, onExport }: { view: ViewId; onRandom: () => void; onExport: () => void }) {
-  const current = viewMeta[view]
-  return (
-    <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:px-6">
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <SidebarTrigger />
-        <Separator orientation="vertical" className="h-4" />
-        <div className="min-w-0">
-          <h1 className="truncate text-sm font-semibold">{current.title}</h1>
-          <p className="hidden truncate text-xs text-muted-foreground sm:block">{current.description}</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-1 sm:gap-2">
-        <Button variant="ghost" size="sm" onClick={onRandom} className="hidden sm:inline-flex">
-          <Shuffle data-icon="inline-start" />随机组合
-        </Button>
-        <APISettingsDialog />
-        <ThemeToggle />
-        <Button size="sm" onClick={onExport} className="hidden md:inline-flex">
-          <Download data-icon="inline-start" />导出整包
-        </Button>
-      </div>
-    </header>
-  )
-}
-
-export function SectionEyebrow({ children }: { children: React.ReactNode }) {
-  return <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground"><Sparkles className="size-4" />{children}</div>
-}
-
-export function EmptyStudio() {
-  return <div className="flex min-h-80 flex-col items-center justify-center gap-3 text-center"><Boxes className="size-10 text-muted-foreground" /><p className="font-medium">还没有装载剧本</p><p className="max-w-sm text-sm text-muted-foreground">先在 DNA 市场选择结构，或前往重组实验室生成一版完整分镜。</p></div>
-}
+export type ViewId="overview"|"sources"|"market"|"mixer"|"studio"|"analytics"|"lineage"|"exports"
+const meta:Record<ViewId,{title:string;description:string}>={overview:{title:"项目总览",description:"第七分钟的证人 · 端到端创作流水线"},sources:{title:"素材库与导入",description:"管理原始素材、解析状态与来源 ID"},market:{title:"DNA 结构资产",description:"浏览可复用的抽象叙事结构"},mixer:{title:"结构重组画布",description:"组合结构、情绪与视觉语法"},studio:{title:"分镜工坊",description:"将叙事 DNA 编译为可执行分镜"},analytics:{title:"可视化分析",description:"评估节拍、贡献、风险与制作效率"},lineage:{title:"来源溯源追踪",description:"查看素材到交付物的完整血缘"},exports:{title:"导出与交付",description:"面向编剧、制片与 AI 视频生成交付物"}}
+export function Header({view,onRandom,onExport}:{view:ViewId;onRandom:()=>void;onExport:()=>void}){const current=meta[view];return <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center border-b bg-background/95 px-4 backdrop-blur lg:px-6"><div className="flex min-w-0 flex-1 items-center gap-3"><SidebarTrigger/><Separator orientation="vertical" className="h-4"/><div className="min-w-0"><h1 className="truncate text-sm font-semibold">{current.title}</h1><p className="hidden truncate text-xs text-muted-foreground sm:block">{current.description}</p></div></div><div className="flex items-center gap-1 sm:gap-2"><DropdownMenu><DropdownMenuTrigger render={<Button variant="outline" size="sm" className="hidden lg:inline-flex"/>}><span>第七分钟的证人</span><Badge variant="secondary">v0.8.3</Badge><ChevronDown data-icon="inline-end"/></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuGroup><DropdownMenuItem>第七分钟的证人</DropdownMenuItem><DropdownMenuItem>完美摸鱼术 · 概念版</DropdownMenuItem></DropdownMenuGroup></DropdownMenuContent></DropdownMenu><Button variant="ghost" size="sm" onClick={onRandom} className="hidden sm:inline-flex"><Shuffle data-icon="inline-start"/>新版本</Button><APISettingsDialog/><ThemeToggle/><Button size="sm" onClick={onExport} className="hidden md:inline-flex"><Download data-icon="inline-start"/>导出整包</Button></div></header>}
+export function SectionEyebrow({children}:{children:React.ReactNode}){return <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground"><Sparkles className="size-4"/>{children}</div>}
+export function EmptyStudio(){return <div className="flex min-h-80 flex-col items-center justify-center gap-3 text-center"><Boxes className="size-10 text-muted-foreground"/><p className="font-medium">还没有装载剧本</p><p className="max-w-sm text-sm text-muted-foreground">先在 DNA 市场选择结构，或前往重组实验室生成一版完整分镜。</p></div>}
