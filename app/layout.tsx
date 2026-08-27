@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist_Mono, Noto_Sans_SC } from "next/font/google"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const notoSans = Noto_Sans_SC({ subsets: ["latin"], variable: "--font-noto-sans-sc" })
@@ -15,12 +16,25 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: "dark",
-  themeColor: "#080b12",
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#171717" },
+  ],
   width: "device-width",
   initialScale: 1,
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-CN" className="dark bg-background"><body className={`${notoSans.className} ${notoSans.variable} ${geistMono.variable} font-sans antialiased`}><TooltipProvider>{children}</TooltipProvider><Toaster richColors position="top-center" />{process.env.NODE_ENV === "production" && <Analytics />}</body></html>
+  return (
+    <html lang="zh-CN" className="bg-background" suppressHydrationWarning>
+      <body className={`${notoSans.className} ${notoSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        <ThemeProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+          <Toaster richColors position="top-center" />
+        </ThemeProvider>
+        {process.env.NODE_ENV === "production" && <Analytics />}
+      </body>
+    </html>
+  )
 }
