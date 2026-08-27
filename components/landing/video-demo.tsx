@@ -20,7 +20,7 @@ export function VideoDemo() {
         <div className="w-full overflow-hidden rounded-lg border bg-muted/40 shadow-sm">
           <video
             className="aspect-video w-full"
-            src="/videos/project-demo.mov"
+            src="https://sjozr7tpgpabomaf.public.blob.vercel-storage.com/videos/project-demo.mov"
             controls
             preload="metadata"
             playsInline
